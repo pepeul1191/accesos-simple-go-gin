@@ -12,7 +12,10 @@ func GetViewSetup() *gintemplate.TemplateEngine {
 		Root:      "views",
 		Extension: ".tpl",
 		//Master:    "layouts/master",
-		Partials: []string{"partials/blank_footer", "partials/blank_header"},
+		Partials: []string{
+			"partials/blank_footer",
+			"partials/blank_header",
+		},
 		Funcs: template.FuncMap{
 			"sub": func(a, b int) int {
 				return a - b

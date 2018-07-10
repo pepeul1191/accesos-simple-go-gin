@@ -28,3 +28,4 @@ Fuentes:
 + https://stackoverflow.com/questions/38541598/why-is-it-possible-to-export-variable-of-private-type
 + https://github.com/codegangsta/gin
 + https://github.com/foolin/gin-template
++ https://markhneedham.com/blog/2016/12/23/go-templating-with-the-gin-web-framework/
