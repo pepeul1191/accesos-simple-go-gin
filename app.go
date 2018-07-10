@@ -50,6 +50,7 @@ func main() {
 	})
 	r.GET("/pong", GetPong)
 	// rutas a otros arhcivos
+	r.GET("/login", routes.LoginIndex)
 	r.GET("/", routes.HomeIndex)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

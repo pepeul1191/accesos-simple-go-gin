@@ -41,7 +41,7 @@ func GetViewSetup() *gintemplate.TemplateEngine {
 				fmt.Println(rpta)
 				return rpta
 			},
-			"raw": func(text string) template.HTML {
+			"raw": func(text string) template.HTML { // de revel
 				return template.HTML(text)
 			},
 		},
