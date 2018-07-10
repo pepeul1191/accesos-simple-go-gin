@@ -19,23 +19,6 @@ func main() {
 	// cargando constantes
 	configs.SetConstants()
 	// configuracion de vistas
-	/*
-		r.HTMLRender = gintemplate.New(gintemplate.TemplateConfig{
-			Root:      "views",
-			Extension: ".tpl",
-			//Master:    "layouts/master",
-			Partials: []string{"partials/blank_footer", "partials/blank_header"},
-			Funcs: template.FuncMap{
-				"sub": func(a, b int) int {
-					return a - b
-				},
-				"copy": func() string {
-					return time.Now().Format("2006")
-				},
-			},
-			DisableCache: true,
-		})
-	*/
 	r.HTMLRender = configs.GetViewSetup()
 	// configuraciones de  archivos estáticos
 	r.Static("/public", "./public")
@@ -49,8 +32,11 @@ func main() {
 		})
 	})
 	r.GET("/pong", GetPong)
-	// rutas a otros arhcivos
+	// login
 	r.GET("/login", routes.LoginIndex)
-	r.GET("/", routes.HomeIndex)
+	// error
+	r.GET("/error/access/:error", routes.ErrorAccess)
+	// ruta por default
+	r.NoRoute(routes.ErrorNoRoute)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
