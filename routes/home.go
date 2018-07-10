@@ -7,7 +7,7 @@ import (
 )
 
 func HomeIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "home/index.tmpl", gin.H{
-		"title": "Home ???",
+	c.HTML(http.StatusOK, "home/index", gin.H{
+		"title": "Index title!",
 	})
 }

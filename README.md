@@ -27,3 +27,4 @@ Fuentes:
 + https://github.com/jinzhu/gorm
 + https://stackoverflow.com/questions/38541598/why-is-it-possible-to-export-variable-of-private-type
 + https://github.com/codegangsta/gin
++ https://github.com/foolin/gin-template

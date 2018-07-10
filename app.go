@@ -1,8 +1,10 @@
 package main
 
 import (
-	"net/http"
+	"html/template"
+	"time"
 
+	"github.com/foolin/gin-template"
 	"github.com/gin-gonic/gin"
 	"github.com/ginv2/configs"
 	"github.com/ginv2/routes"
@@ -21,7 +23,21 @@ func main() {
 	// cargando constantes
 	configs.SetConstants()
 	// configuracion de vistas
-	r.LoadHTMLGlob("templates/**/*")
+	r.HTMLRender = gintemplate.New(gintemplate.TemplateConfig{
+		Root:      "views",
+		Extension: ".tpl",
+		//Master:    "layouts/master",
+		Partials: []string{"partials/blank_footer", "partials/blank_header"},
+		Funcs: template.FuncMap{
+			"sub": func(a, b int) int {
+				return a - b
+			},
+			"copy": func() string {
+				return time.Now().Format("2006")
+			},
+		},
+		DisableCache: true,
+	})
 	// configuraciones de  archivos estáticos
 	r.Static("/public", "./public")
 	r.StaticFile("/favicon.ico", "./public/favicon.ico")
@@ -34,12 +50,7 @@ func main() {
 		})
 	})
 	r.GET("/pong", GetPong)
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "home/index.tmpl", gin.H{
-			"title": "Home",
-		})
-	})
 	// rutas a otros arhcivos
-	r.GET("/home", routes.HomeIndex)
+	r.GET("/", routes.HomeIndex)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
