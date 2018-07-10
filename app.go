@@ -5,6 +5,14 @@ import (
 	"github.com/ginv2/configs"
 )
 
+func GetPong(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"message":    "pong",
+		"BASE_URL":   configs.Constants["BASE_URL"],
+		"STATIC_URL": configs.Constants["STATIC_URL"],
+	})
+}
+
 func main() {
 	r := gin.Default()
 	configs.SetConstants()
@@ -15,5 +23,6 @@ func main() {
 			"message": "pong??",
 		})
 	})
+	r.GET("/pong", GetPong)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
