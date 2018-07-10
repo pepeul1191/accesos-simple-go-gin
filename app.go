@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ginv2/configs"
+	"github.com/ginv2/routes"
 )
 
 func GetPong(c *gin.Context) {
@@ -18,9 +19,10 @@ func GetPong(c *gin.Context) {
 func main() {
 	r := gin.Default()
 	// cargando constantes
-	//configs.SetConstants()
-	// configuraciones de vistas y archivos estáticos
+	configs.SetConstants()
+	// configuracion de vistas
 	r.LoadHTMLGlob("templates/**/*")
+	// configuraciones de  archivos estáticos
 	r.Static("/public", "./public")
 	r.StaticFile("/favicon.ico", "./public/favicon.ico")
 	// middleware personalizado
@@ -37,5 +39,7 @@ func main() {
 			"title": "Home",
 		})
 	})
+	// rutas a otros arhcivos
+	r.GET("/home", routes.HomeIndex)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
