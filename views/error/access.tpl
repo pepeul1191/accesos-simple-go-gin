@@ -1,6 +1,6 @@
 {{include "partials/blank_header"}}
 <div class="row text-center">
-  <h1 class="align-text-bottom">{{.numero}}</h1>
+  <h1 class="align-text-bottom">{{.error}}</h1>
 </div>
 <div class="row text-center">
 	<div class="error-divider">
