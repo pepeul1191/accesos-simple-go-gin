@@ -2,3 +2,4 @@ gin-bin
 vendor/github.com
 vendor/golang.org
 vendor/gopkg.in
+public/bower_components
