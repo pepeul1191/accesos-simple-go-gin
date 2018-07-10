@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"fmt"
 	"html/template"
 	"time"
 
@@ -22,6 +23,26 @@ func GetViewSetup() *gintemplate.TemplateEngine {
 			},
 			"copy": func() string {
 				return time.Now().Format("2006")
+			},
+			"loadCSS": func(arrayCss []string) string {
+				var rpta = ""
+				for i := 0; i < len(arrayCss); i++ {
+					var temp = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" + Constants["STATIC_URL"] + arrayCss[i] + ".css\"/>"
+					rpta = rpta + temp
+				}
+				return rpta
+			},
+			"loadJS": func(arrayJs []string) string {
+				var rpta = ""
+				for i := 0; i < len(arrayJs); i++ {
+					var temp = "<script src=\"" + Constants["STATIC_URL"] + arrayJs[i] + ".js\" type=\"text/javascript\"></script>"
+					rpta = rpta + temp
+				}
+				fmt.Println(rpta)
+				return rpta
+			},
+			"raw": func(text string) template.HTML {
+				return template.HTML(text)
 			},
 		},
 		DisableCache: true,

@@ -29,3 +29,7 @@ Fuentes:
 + https://github.com/codegangsta/gin
 + https://github.com/foolin/gin-template
 + https://markhneedham.com/blog/2016/12/23/go-templating-with-the-gin-web-framework/
++ https://github.com/foolin/gin-template/blob/master/examples/advance/views/index.tpl
++ https://github.com/foolin/gin-template/blob/master/examples/advance/main.go
++ https://golang.org/pkg/text/template/
++ https://github.com/revel/revel/blob/master/template_functions.go
