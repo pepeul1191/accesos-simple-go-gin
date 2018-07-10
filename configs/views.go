@@ -1,7 +1,6 @@
 package configs
 
 import (
-	"fmt"
 	"html/template"
 	"time"
 
@@ -38,7 +37,6 @@ func GetViewSetup() *gintemplate.TemplateEngine {
 					var temp = "<script src=\"" + Constants["STATIC_URL"] + arrayJs[i] + ".js\" type=\"text/javascript\"></script>"
 					rpta = rpta + temp
 				}
-				fmt.Println(rpta)
 				return rpta
 			},
 			"raw": func(text string) template.HTML { // de revel

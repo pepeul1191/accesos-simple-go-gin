@@ -26,11 +26,8 @@ func main() {
 	// middleware personalizado
 	r.Use(configs.BeforeAll())
 	// rutas
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong??",
-		})
-	})
+	// home
+	r.GET("/", routes.HomeIndex)
 	r.GET("/pong", GetPong)
 	// login
 	r.GET("/login", routes.LoginIndex)
