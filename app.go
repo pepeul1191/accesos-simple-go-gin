@@ -35,6 +35,8 @@ func main() {
 	r.GET("/error/access/:error", routes.ErrorAccess)
 	// REST
 	r.GET("/departamento/listar", routes.DepartamentoListar)
+	r.GET("/provincia/listar/:departamento_id", routes.ProvinciaListar)
+	//r.GET("/distrito/listar/:provincia", routes.DistritoListar)
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
 	r.Run() // listen and serve on 0.0.0.0:8080
