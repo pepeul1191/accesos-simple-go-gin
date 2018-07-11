@@ -33,6 +33,8 @@ func main() {
 	r.GET("/login", routes.LoginIndex)
 	// error
 	r.GET("/error/access/:error", routes.ErrorAccess)
+	// REST
+	r.GET("/departamento/listar", routes.DepartamentoListar)
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
 	r.Run() // listen and serve on 0.0.0.0:8080
