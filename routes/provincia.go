@@ -25,7 +25,7 @@ func ProvinciaListar(c *gin.Context) {
 			rpta := structs.Error{
 				TipoMensaje: "error",
 				Mensaje: []string{
-					"No se ha podido listar los departamentos",
+					"No se ha podido listar las provincias del departamento",
 					err.Error(),
 				}}
 			c.JSON(500, rpta)
