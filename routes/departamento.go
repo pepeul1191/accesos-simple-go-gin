@@ -9,7 +9,8 @@ import (
 
 func DepartamentoListar(c *gin.Context) {
 	var departamentos []models.Departamento
-	if err := configs.Database().Find(&departamentos).Error; err != nil {
+	db := configs.Database()
+	if err := db.Find(&departamentos).Error; err != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
@@ -18,6 +19,7 @@ func DepartamentoListar(c *gin.Context) {
 			}}
 		c.JSON(500, rpta)
 	} else {
+		defer db.Close()
 		c.JSON(200, departamentos)
 	}
 }

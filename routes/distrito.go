@@ -20,8 +20,9 @@ func DistritoListar(c *gin.Context) {
 			}}
 		c.JSON(500, rpta)
 	} else {
+		db := configs.Database()
 		var distritos []models.Distrito
-		if err := configs.Database().Where("provincia_id = ?", provincia_id).Select("id, nombre").Find(&distritos).Error; err != nil {
+		if err := db.Where("provincia_id = ?", provincia_id).Select("id, nombre").Find(&distritos).Error; err != nil {
 			rpta := structs.Error{
 				TipoMensaje: "error",
 				Mensaje: []string{
@@ -30,6 +31,7 @@ func DistritoListar(c *gin.Context) {
 				}}
 			c.JSON(500, rpta)
 		} else {
+			defer db.Close()
 			c.JSON(200, distritos)
 		}
 	}
@@ -38,15 +40,18 @@ func DistritoListar(c *gin.Context) {
 func DistritoBuscar(c *gin.Context) {
 	var nombre string = c.Query("nombre")
 	var distritos []models.DepartamentoProvinciaDistrito
-	if err := configs.Database().Limit(10).Where("nombre LIKE ?", nombre+"%").Find(&distritos).Error; err != nil {
+	db := configs.Database()
+	if err := db.Limit(10).Where("nombre LIKE ?", nombre+"%").Find(&distritos).Error; err != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
 				"No se ha podido buscar el nombre del distrito por id",
 				err.Error(),
 			}}
+
 		c.JSON(500, rpta)
 	} else {
+		defer db.Close()
 		c.JSON(200, distritos)
 	}
 }
@@ -63,7 +68,8 @@ func DistritoNombre(c *gin.Context) {
 		c.JSON(500, rpta)
 	} else {
 		var distrito models.DepartamentoProvinciaDistrito
-		if err := configs.Database().Where("id = ?", distrito_id).First(&distrito).Error; err != nil {
+		db := configs.Database()
+		if err := db.Where("id = ?", distrito_id).First(&distrito).Error; err != nil {
 			rpta := structs.Error{
 				TipoMensaje: "error",
 				Mensaje: []string{
@@ -72,6 +78,7 @@ func DistritoNombre(c *gin.Context) {
 				}}
 			c.JSON(500, rpta)
 		} else {
+			defer db.Close()
 			c.String(200, distrito.Nombre)
 		}
 	}

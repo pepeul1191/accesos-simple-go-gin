@@ -21,7 +21,8 @@ func ProvinciaListar(c *gin.Context) {
 		c.JSON(500, rpta)
 	} else {
 		var provincias []models.Provincia
-		if err := configs.Database().Where("departamento_id = ?", departamento_id).Select("id, nombre").Find(&provincias).Error; err != nil {
+		db := configs.Database()
+		if err := db.Where("departamento_id = ?", departamento_id).Select("id, nombre").Find(&provincias).Error; err != nil {
 			rpta := structs.Error{
 				TipoMensaje: "error",
 				Mensaje: []string{
@@ -30,6 +31,7 @@ func ProvinciaListar(c *gin.Context) {
 				}}
 			c.JSON(500, rpta)
 		} else {
+			defer db.Close()
 			c.JSON(200, provincias)
 		}
 	}
