@@ -41,3 +41,8 @@ Fuentes:
 + https://github.com/revel/revel/blob/master/template_functions.go
 + https://gobyexample.com/json
 + https://stackoverflow.com/questions/32443738/setting-up-route-not-found-in-gin
++ https://stackoverflow.com/questions/43153181/json-and-struct-composition-in-go
++ http://gorm.io/docs/delete.html
++ http://gorm.io/docs/update.html
++ http://gorm.io/docs/create.html
++ https://forum.golangbridge.org/t/gorm-save-is-not-returning-primary-key/6289/11

@@ -35,6 +35,7 @@ func main() {
 	r.GET("/error/access/:error", routes.ErrorAccess)
 	// REST
 	r.GET("/departamento/listar", routes.DepartamentoListar)
+	r.POST("/departamento/guardar", routes.DepartamentoGuardar)
 	r.GET("/provincia/listar/:departamento_id", routes.ProvinciaListar)
 	r.GET("/distrito/buscar", routes.DistritoBuscar)
 	r.GET("/distrito/listar/:provincia_id", routes.DistritoListar)
