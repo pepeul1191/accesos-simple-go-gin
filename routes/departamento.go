@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"fmt"
-
 	"encoding/json"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +32,6 @@ func DepartamentoGuardar(c *gin.Context) {
 	err := json.Unmarshal([]byte(postData), data)
 	var nuevosId []structs.IdsNuevosTemp
 	if err != nil {
-		fmt.Println(err.Error())
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
@@ -47,9 +44,16 @@ func DepartamentoGuardar(c *gin.Context) {
 		for i := 0; i < len(data.Nuevos); i++ {
 			var nuevo = models.Departamento{
 				Nombre: data.Nuevos[i].Nombre}
-			tx.Create(&nuevo)
-			fmt.Println(nuevo.ID)
-			//temp = {'temporal' : temp_id, 'nuevo_id' : s.id}
+			if err := tx.Create(&nuevo).Error; err != nil {
+				tx.Rollback()
+				rpta := structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"No se ha podido guardar los departamentos",
+						err.Error(),
+					}}
+				c.JSON(500, rpta)
+			}
 			nuevosId = append(nuevosId,
 				structs.IdsNuevosTemp{
 					Temporal: data.Nuevos[i].Id,
@@ -58,26 +62,42 @@ func DepartamentoGuardar(c *gin.Context) {
 		for i := 0; i < len(data.Editados); i++ {
 			editado := data.Editados[i]
 			var departamentos []models.Departamento
-			tx.Model(&departamentos).Where("id = ?", editado.Id).Update(
-				"nombre", editado.Nombre)
+			if err := tx.Model(&departamentos).Where("id = ?", editado.Id).Update(
+				"nombre", editado.Nombre).Error; err != nil {
+				tx.Rollback()
+				rpta := structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"No se ha podido guardar los departamentos",
+						err.Error(),
+					}}
+				c.JSON(500, rpta)
+			}
 		}
 		for i := 0; i < len(data.Eliminados); i++ {
 			eliminado := data.Eliminados[i]
-			tx.Where("id = ?", eliminado).Delete(&models.Departamento{})
+			if err := tx.Where("id = ?", eliminado).Delete(&models.Departamento{}).Error; err != nil {
+				tx.Rollback()
+				rpta := structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"No se ha podido guardar los departamentos",
+						err.Error(),
+					}}
+				c.JSON(500, rpta)
+			}
 		}
+		tx.Commit()
 		if tx.Error != nil {
 			tx.Rollback()
 			tx.Close()
-			//errors := tx.Error
-			rpta := structs.Error{
-				TipoMensaje: "error",
-				Mensaje: []string{
-					"No se ha podido listar los departamentos",
-					err.Error(),
-				}}
-			c.JSON(500, rpta)
+			c.JSON(500, gin.H{
+				"tipo_mensaje": "error",
+				"mensaje": []interface{}{
+					"No se ha podido guardar los departamentos",
+					nuevosId},
+			})
 		} else {
-			tx.Commit()
 			tx.Close()
 			c.JSON(200, gin.H{
 				"tipo_mensaje": "success",

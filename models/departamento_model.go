@@ -11,7 +11,7 @@ type Departamento struct {
 }
 
 func (Departamento) TableName() string {
-	return "departamentos"
+	return "departamentosss"
 }
 
 func (departamento *Departamento) ToJSON() ([]byte, error) {
