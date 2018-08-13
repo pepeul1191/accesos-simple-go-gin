@@ -30,35 +30,59 @@ func DepartamentoListar(c *gin.Context) {
 
 func DepartamentoGuardar(c *gin.Context) {
 	var postData string = c.PostForm("data")
-	fmt.Println("1 ++++++++++++++++++++++++++++++++++++++")
-	fmt.Println(postData)
 	data := &structs.TableDepartamentoStruct{}
 	err := json.Unmarshal([]byte(postData), data)
+	var nuevosId []int
 	if err != nil {
 		fmt.Println(err.Error())
-		//invalid character '\'' looking for beginning of object key string
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"No se ha guardar los departamentos, error de parseo del JSON",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
 	} else {
+		tx := configs.Database().Begin()
 		for i := 0; i < len(data.Nuevos); i++ {
-			fmt.Println("A. CREAR ++++++++++++++++++++++++++++++++++++++")
-			var nuevo = models.Departamento{Nombre: data.Nuevos[i].Nombre}
-			db := configs.Database()
-			db.Create(&nuevo)
+			var nuevo = models.Departamento{
+				Nombre: data.Nuevos[i].Nombre}
+			tx.Create(&nuevo)
 			fmt.Println(nuevo.ID)
+			//temp = {'temporal' : temp_id, 'nuevo_id' : s.id}
+			nuevosId = append(nuevosId, nuevo.ID)
 		}
 		for i := 0; i < len(data.Editados); i++ {
 			editado := data.Editados[i]
 			var departamentos []models.Departamento
-			db := configs.Database()
-			db.Model(&departamentos).Where("id = ?", editado.Id).Update("nombre", editado.Nombre)
+			tx.Model(&departamentos).Where("id = ?", editado.Id).Update(
+				"nombre", editado.Nombre)
 		}
 		for i := 0; i < len(data.Eliminados); i++ {
 			eliminado := data.Eliminados[i]
-			db := configs.Database()
-			db.Where("id = ?", eliminado).Delete(&models.Departamento{})
+			tx.Where("id = ?", eliminado).Delete(&models.Departamento{})
+		}
+		if tx.Error != nil {
+			tx.Rollback()
+			tx.Close()
+			//errors := tx.Error
+			rpta := structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"No se ha podido listar los departamentos",
+					err.Error(),
+				}}
+			c.JSON(500, rpta)
+		} else {
+			tx.Commit()
+			tx.Close()
+			mensaje := []interface{}{
+				"Se ha registrado los cambios en los departamentos",
+				nuevosId}
+			c.JSON(200, gin.H{
+				"tipo_mensaje": "success",
+				"mensaje":      mensaje,
+			})
 		}
 	}
-	fmt.Println("2 ++++++++++++++++++++++++++++++++++++++")
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
 }
