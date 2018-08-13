@@ -32,7 +32,7 @@ func DepartamentoGuardar(c *gin.Context) {
 	var postData string = c.PostForm("data")
 	data := &structs.TableDepartamentoStruct{}
 	err := json.Unmarshal([]byte(postData), data)
-	var nuevosId []int
+	var nuevosId []structs.IdsNuevosTemp
 	if err != nil {
 		fmt.Println(err.Error())
 		rpta := structs.Error{
@@ -50,7 +50,10 @@ func DepartamentoGuardar(c *gin.Context) {
 			tx.Create(&nuevo)
 			fmt.Println(nuevo.ID)
 			//temp = {'temporal' : temp_id, 'nuevo_id' : s.id}
-			nuevosId = append(nuevosId, nuevo.ID)
+			nuevosId = append(nuevosId,
+				structs.IdsNuevosTemp{
+					Temporal: data.Nuevos[i].Id,
+					NuevoId:  nuevo.ID})
 		}
 		for i := 0; i < len(data.Editados); i++ {
 			editado := data.Editados[i]
@@ -76,12 +79,11 @@ func DepartamentoGuardar(c *gin.Context) {
 		} else {
 			tx.Commit()
 			tx.Close()
-			mensaje := []interface{}{
-				"Se ha registrado los cambios en los departamentos",
-				nuevosId}
 			c.JSON(200, gin.H{
 				"tipo_mensaje": "success",
-				"mensaje":      mensaje,
+				"mensaje": []interface{}{
+					"Se ha registrado los cambios en los departamentos",
+					nuevosId},
 			})
 		}
 	}
