@@ -16,6 +16,11 @@ Autoreload ante cambios:
     $ go get github.com/codegangsta/gin
     $ gin run main.go
 
+Migraciones con DBMATE - ubicaciones:
+
+    $ dbmate -d "ubicaciones/migrations" -e "DATABASE_UBICACIONES" new <<nombre_de_migracion>>
+    $ dbmate -d "ubicaciones/migrations" -e "DATABASE_UBICACIONES" up
+
 ---
 
 Fuentes:
