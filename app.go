@@ -43,6 +43,7 @@ func main() {
 		r.GET("/distrito/nombre/:distrito_id", routes.DistritoNombre)
 	*/
 	r.GET("/user_state/list", routes.UserStateList)
+	r.GET("/user_state/get/:id", routes.UserStateGet)
 
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
