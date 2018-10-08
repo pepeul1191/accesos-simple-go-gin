@@ -1,6 +1,6 @@
 package helpers
 
-import "github.com/ginv2/configs"
+import "github.com/swp/access/configs"
 
 func HomeIndexCSS() []string {
 	rpta := []string{}

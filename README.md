@@ -18,8 +18,8 @@ Autoreload ante cambios:
 
 Migraciones con DBMATE - ubicaciones:
 
-    $ dbmate -d "ubicaciones/migrations" -e "DATABASE_UBICACIONES" new <<nombre_de_migracion>>
-    $ dbmate -d "ubicaciones/migrations" -e "DATABASE_UBICACIONES" up
+    $ dbmate -d "db/migrations" -e "ACCESS" new <<nombre_de_migracion>>
+    $ dbmate -d "db/migrations" -e "ACCESS" up
 
 ---
 

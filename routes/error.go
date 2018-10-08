@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ginv2/configs"
-	"github.com/ginv2/helpers"
-	"github.com/ginv2/structs"
+	"github.com/swp/access/configs"
+	"github.com/swp/access/helpers"
+	"github.com/swp/access/structs"
 )
 
 func ErrorNoRoute(c *gin.Context) {

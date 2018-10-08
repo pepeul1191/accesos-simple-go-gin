@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ginv2/configs"
-	"github.com/ginv2/routes"
+	"github.com/swp/access/configs"
+	"github.com/swp/access/routes"
 )
 
 func GetPong(c *gin.Context) {

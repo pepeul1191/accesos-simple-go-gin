@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ginv2/configs"
-	"github.com/ginv2/helpers"
+	"github.com/swp/access/configs"
+	"github.com/swp/access/helpers"
 )
 
 func LoginIndex(c *gin.Context) {

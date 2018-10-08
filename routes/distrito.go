@@ -4,9 +4,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ginv2/configs"
-	"github.com/ginv2/models"
-	"github.com/ginv2/structs"
+	"github.com/swp/access/configs"
+	"github.com/swp/access/models"
+	"github.com/swp/access/structs"
 )
 
 func DistritoListar(c *gin.Context) {
