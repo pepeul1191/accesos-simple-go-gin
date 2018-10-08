@@ -34,12 +34,16 @@ func main() {
 	// error
 	r.GET("/error/access/:error", routes.ErrorAccess)
 	// REST
-	r.GET("/departamento/listar", routes.DepartamentoListar)
-	r.POST("/departamento/guardar", routes.DepartamentoGuardar)
-	r.GET("/provincia/listar/:departamento_id", routes.ProvinciaListar)
-	r.GET("/distrito/buscar", routes.DistritoBuscar)
-	r.GET("/distrito/listar/:provincia_id", routes.DistritoListar)
-	r.GET("/distrito/nombre/:distrito_id", routes.DistritoNombre)
+	/*
+		r.GET("/departamento/listar", routes.DepartamentoListar)
+		r.POST("/departamento/guardar", routes.DepartamentoGuardar)
+		r.GET("/provincia/listar/:departamento_id", routes.ProvinciaListar)
+		r.GET("/distrito/buscar", routes.DistritoBuscar)
+		r.GET("/distrito/listar/:provincia_id", routes.DistritoListar)
+		r.GET("/distrito/nombre/:distrito_id", routes.DistritoNombre)
+	*/
+	r.GET("/user_state/list", routes.UserStateList)
+
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
 	r.Run() // listen and serve on 0.0.0.0:8080
