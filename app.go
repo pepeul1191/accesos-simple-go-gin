@@ -45,6 +45,7 @@ func main() {
 	r.GET("/user_state/list", routes.UserStateList)
 	r.GET("/user_state/get/:id", routes.UserStateGet)
 	r.POST("/permission/save", routes.PermissionSave)
+	r.POST("/user/create", routes.UserCreate)
 
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)

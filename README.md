@@ -58,3 +58,4 @@ Fuentes:
 + http://gorm.io/docs/update.html
 + http://gorm.io/docs/create.html
 + https://forum.golangbridge.org/t/gorm-save-is-not-returning-primary-key/6289/11
++ https://github.com/badoux/checkmail

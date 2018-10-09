@@ -1,5 +1,7 @@
 package configs
 
+import "fmt"
+
 func HelperLoadCSS(css_array []string) (out string) {
 	var rpta string = ""
 	for i := 0; i < len(css_array); i++ {
@@ -16,4 +18,14 @@ func HelperLoadJS(js_array []string) (out string) {
 	}
 	out = rpta
 	return
+}
+
+func EmailFormatCheck(email string) (out bool) {
+	err := ValidateFormat("ç$€§/az@gmail.com")
+	rpta := true
+	if err != nil {
+		fmt.Println(err)
+		rpta = false
+	}
+	return rpta
 }
