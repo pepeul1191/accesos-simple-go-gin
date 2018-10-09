@@ -21,7 +21,9 @@ end
 Then("Se debe obtener un status code success {int}") do |status_code|
   if SHOW_RESPONSE
     puts @response.code
+    puts "0 ++++++++++++++++++++"
     puts @response.body
+    puts "1 ++++++++++++++++++++"
   end
   expect(@response.code).to be == status_code
 end

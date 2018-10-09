@@ -9,7 +9,6 @@ type User struct {
 	User          string `gorm:"column:user" json:"user"`
 	Pass          string `gorm:"column:pass" json:"pass"`
 	Email         string `gorm:"column:email" json:"email"`
-	Count         string `gorm:"column:count"`
 	User_state_id int    `gorm:"column:user_state_id" json:"user_state_id,omitempty"`
 }
 

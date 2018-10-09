@@ -59,3 +59,4 @@ Fuentes:
 + http://gorm.io/docs/create.html
 + https://forum.golangbridge.org/t/gorm-save-is-not-returning-primary-key/6289/11
 + https://github.com/badoux/checkmail
++ https://www.thepolyglotdeveloper.com/2018/02/encrypt-decrypt-data-golang-application-crypto-packages/
