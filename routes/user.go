@@ -11,6 +11,57 @@ import (
 	"github.com/swp/access/structs"
 )
 
+func UserSystemValidate(c *gin.Context) {
+	var postData string = c.PostForm("data")
+	data := &structs.UserSystemValidationStruct{}
+	err := json.Unmarshal([]byte(postData), data)
+	if err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"No se ha guardar los permisos, error de parseo del JSON",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	} else {
+		var error bool = false
+		var errorStruct structs.Error
+		var user string = data.User
+		var systemId string = data.SystemId
+		var pass string = data.Pass //"vPWKzwMiwQniX0HmpIrBW416CZzRDYksG991XW+a9iU="
+		//pass, err = fmt.Sprintf("%x", configs.Encrypt(c.PostForm("pass")))
+		fmt.Println("1 ++++++++++++++++++++++++++++++++")
+		fmt.Println(user)
+		fmt.Println("2 ++++++++++++++++++++++++++++++++")
+		fmt.Println(pass)
+		fmt.Println("3 ++++++++++++++++++++++++++++++++")
+		fmt.Println(systemId)
+		fmt.Println("4 ++++++++++++++++++++++++++++++++")
+		db := configs.Database()
+		var userSystem models.UserSystem
+		var count int
+		err := db.Where("user = ? AND pass = ? AND system_id = ?", user, pass, systemId).Find(&userSystem).Count(&count).Error
+		if err != nil {
+			if err.Error() == "record not found" {
+				count = 0
+			} else {
+				error = true
+				errorStruct = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"An error occurred while validating the user",
+						err.Error(),
+					}}
+			}
+		}
+		if error == true {
+			c.JSON(500, errorStruct)
+		} else {
+			c.String(200, strconv.Itoa(count))
+		}
+	}
+}
+
 func UserCreate(c *gin.Context) {
 	var error bool = false
 	var idNewUser int
