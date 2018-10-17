@@ -4,6 +4,8 @@ Instalación de dependencias:
 
     $ go get -u github.com/gin-gonic/gin
     $ go get -u github.com/jinzhu/gorm
+    $ go get -u github.com/foolin/gin-template
+    $ go get -u github.com/go-sql-driver/mysql
 
 Las variables globales deben empezar con mayúscula
 
