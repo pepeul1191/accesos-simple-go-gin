@@ -1,7 +1,7 @@
 Given("Crear POST data user-validate sin errores") do
   @data = {
-    :user => 'pepe',
-    :pass => 'vPWKzwMiwQniX0HmpIrBW416CZzRDYksG991XW+a9iU=',
+    :user => 'yackys',
+    :pass => '+8IhO1fN6o4nlSfnNQOQzvMPg1QZtPwZsRsQXu1uSaE=',
     :system_id => '1',
   }
 end

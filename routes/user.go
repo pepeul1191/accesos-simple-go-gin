@@ -25,25 +25,29 @@ func UserSystemValidate(c *gin.Context) {
 		c.JSON(500, rpta)
 	} else {
 		var error bool = false
+		var found bool = true
 		var errorStruct structs.Error
 		var user string = data.User
 		var systemId string = data.SystemId
-		var pass string = data.Pass //"vPWKzwMiwQniX0HmpIrBW416CZzRDYksG991XW+a9iU="
+		var pass string = "+8IhO1fN6o4nlSfnNQOQzvMPg1QZtPwZsRsQXu1uSaE=" //data.Pass
 		//pass, err = fmt.Sprintf("%x", configs.Encrypt(c.PostForm("pass")))
-		fmt.Println("1 ++++++++++++++++++++++++++++++++")
-		fmt.Println(user)
-		fmt.Println("2 ++++++++++++++++++++++++++++++++")
-		fmt.Println(pass)
-		fmt.Println("3 ++++++++++++++++++++++++++++++++")
-		fmt.Println(systemId)
-		fmt.Println("4 ++++++++++++++++++++++++++++++++")
+		/*
+			fmt.Println("1 ++++++++++++++++++++++++++++++++")
+			fmt.Println(user)
+			fmt.Println("2 ++++++++++++++++++++++++++++++++")
+			fmt.Println(pass)
+			fmt.Println("3 ++++++++++++++++++++++++++++++++")
+			fmt.Println(systemId)
+			fmt.Println("4 ++++++++++++++++++++++++++++++++")
+		*/
 		db := configs.Database()
-		var userSystem models.UserSystem
-		var count int
-		err := db.Where("user = ? AND pass = ? AND system_id = ?", user, pass, systemId).Find(&userSystem).Count(&count).Error
+		var state string = ""
+		var userStateSystem models.UserStateSystem
+		err := db.Where("user = ? AND pass = ? AND system_id = ?", user, pass, systemId).Find(&userStateSystem).Error
 		if err != nil {
 			if err.Error() == "record not found" {
-				count = 0
+				state = "inexistant"
+				found = false
 			} else {
 				error = true
 				errorStruct = structs.Error{
@@ -57,7 +61,10 @@ func UserSystemValidate(c *gin.Context) {
 		if error == true {
 			c.JSON(500, errorStruct)
 		} else {
-			c.String(200, strconv.Itoa(count))
+			if found {
+				state = userStateSystem.State
+			}
+			c.JSON(200, state)
 		}
 	}
 }
