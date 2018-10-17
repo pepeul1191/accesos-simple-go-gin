@@ -49,5 +49,5 @@ func main() {
 
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
-	r.Run() // listen and serve on 0.0.0.0:8080
+	r.Run(":4100") // listen and serve on 0.0.0.0:8080
 }
