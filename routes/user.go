@@ -19,7 +19,7 @@ func UserSystemValidate(c *gin.Context) {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
-				"No se ha guardar los permisos, error de parseo del JSON",
+				"No se ha podido validar el usuario, error de parseo del JSON",
 				err.Error(),
 			}}
 		c.JSON(500, rpta)
@@ -29,8 +29,7 @@ func UserSystemValidate(c *gin.Context) {
 		var errorStruct structs.Error
 		var user string = data.User
 		var systemId string = data.SystemId
-		var pass string = "+8IhO1fN6o4nlSfnNQOQzvMPg1QZtPwZsRsQXu1uSaE=" //data.Pass
-		//pass, err = fmt.Sprintf("%x", configs.Encrypt(c.PostForm("pass")))
+		var pass string = data.Pass
 		/*
 			fmt.Println("1 ++++++++++++++++++++++++++++++++")
 			fmt.Println(user)
@@ -113,10 +112,9 @@ func UserCreate(c *gin.Context) {
 			} else if err.Error() == "record not found" {
 				//2.2 No es repetido -> OK
 				//3. Encriptar pass y crear usuario
-				ciphertext := configs.Encrypt([]byte(data.Pass))
 				var newUser = models.User{
 					User:          data.User,
-					Pass:          fmt.Sprintf("%x", ciphertext),
+					Pass:          fmt.Sprintf("%x", data.Pass),
 					Email:         data.Email,
 					User_state_id: 1,
 				}

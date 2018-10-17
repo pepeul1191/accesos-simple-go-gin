@@ -14,7 +14,7 @@ When("Ejecutar petición HTTP") do
   @response = HTTParty.post(
     @url,
     headers: @headers,
-    body: 'data=' + @data.to_json,
+    body: 'data=' + URI.escape(@data.to_json, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")),
   )
 end
 
