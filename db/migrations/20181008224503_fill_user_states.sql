@@ -5,7 +5,9 @@ INSERT INTO user_states (name) VALUES
   ('inactive'),
   ('suspended'),
   ('deleted'),
-  ('vacationing');
+  ('vacationing'),
+  ('email_pending'),
+  ('incompleted');
 
 -- migrate:down
 

@@ -95,7 +95,7 @@ func UserCreate(c *gin.Context) {
 			errorStruct = structs.Error{
 				TipoMensaje: "error",
 				Mensaje: []string{
-					"Usuario repetido",
+					"repeated_user",
 				}}
 		} else if err.Error() == "record not found" {
 			//1.2 No es repetido -> OK
@@ -107,7 +107,7 @@ func UserCreate(c *gin.Context) {
 				errorStruct = structs.Error{
 					TipoMensaje: "error",
 					Mensaje: []string{
-						"Correo repetido",
+						"repeated_email",
 					}}
 			} else if err.Error() == "record not found" {
 				//2.2 No es repetido -> OK
@@ -116,7 +116,7 @@ func UserCreate(c *gin.Context) {
 					User:          data.User,
 					Pass:          fmt.Sprintf("%x", data.Pass),
 					Email:         data.Email,
-					User_state_id: 1,
+					User_state_id: 6,
 				}
 				if err := db.Create(&newUser).Error; err != nil {
 					error = true
@@ -156,5 +156,46 @@ func UserCreate(c *gin.Context) {
 		c.JSON(500, errorStruct)
 	} else {
 		c.String(200, strconv.Itoa(idNewUser))
+	}
+}
+
+func UserDelete(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"Sent parameter could not be parsed to integer",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	} else {
+		db := configs.Database()
+		var user []models.User
+		if err := db.Where("id = ?", id).Delete(user).Error; err != nil {
+			var status int
+			var rpta structs.Error
+			if err.Error() == "record not found" {
+				rpta = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"User to delete does not exist",
+						err.Error(),
+					}}
+				status = 404
+			} else {
+				rpta = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"An error has occurred removing the user",
+						err.Error(),
+					}}
+				status = 500
+			}
+			c.JSON(status, rpta)
+		} else {
+			defer db.Close()
+			c.JSON(200, "User deleted")
+		}
 	}
 }
