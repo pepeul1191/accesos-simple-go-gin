@@ -6,3 +6,8 @@ type UserCreateStruct struct {
 	Email    string `json:"email"`
 	SystemId int    `json:"system_id"`
 }
+
+type UserKeyCreatedStruct struct {
+	UserId        int    `json:"user_id"`
+	ActivationKey string `json:"activation_key"`
+}

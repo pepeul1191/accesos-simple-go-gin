@@ -71,6 +71,7 @@ func UserCreate(c *gin.Context) {
 	var error bool = false
 	var idNewUser int
 	var errorStruct structs.Error
+	var rptaStruct structs.UserKeyCreatedStruct
 	var postData string = c.PostForm("data")
 	data := &structs.UserCreateStruct{}
 	err := json.Unmarshal([]byte(postData), data)
@@ -155,6 +156,11 @@ func UserCreate(c *gin.Context) {
 									"No se ha crear el nuevo usuario",
 									err3.Error(),
 								}}
+						} else {
+							rptaStruct = structs.UserKeyCreatedStruct{
+								UserId:        idNewUser,
+								ActivationKey: activationKey,
+							}
 						}
 					}
 				}
@@ -184,7 +190,7 @@ func UserCreate(c *gin.Context) {
 	if error == true {
 		c.JSON(500, errorStruct)
 	} else {
-		c.String(200, strconv.Itoa(idNewUser))
+		c.JSON(200, rptaStruct)
 	}
 }
 
