@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -111,10 +110,10 @@ func UserCreate(c *gin.Context) {
 					}}
 			} else if err.Error() == "record not found" {
 				//2.2 No es repetido -> OK
-				//3. Encriptar pass y crear usuario
+				//3. Crear usuario
 				var newUser = models.User{
 					User:          data.User,
-					Pass:          fmt.Sprintf("%x", data.Pass),
+					Pass:          data.Pass,
 					Email:         data.Email,
 					User_state_id: 6,
 				}
@@ -128,6 +127,22 @@ func UserCreate(c *gin.Context) {
 						}}
 				} else {
 					idNewUser = newUser.ID
+					//4. Crear asociación usuario sistema
+					var newUserSystem = models.UserSystem{
+						SystemId: data.SystemId,
+						UserId:   idNewUser,
+					}
+					if err2 := db.Create(&newUserSystem).Error; err2 != nil {
+						error = true
+						errorStruct = structs.Error{
+							TipoMensaje: "error",
+							Mensaje: []string{
+								"No se ha crear el nuevo usuario",
+								err.Error(),
+							}}
+					} else {
+						//5. Crear usuario y key de activación
+					}
 				}
 			} else {
 				defer db.Close()
