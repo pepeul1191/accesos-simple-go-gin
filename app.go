@@ -48,6 +48,7 @@ func main() {
 	r.POST("/user/create", routes.UserCreate)
 	r.POST("/user/delete/:id", routes.UserDelete)
 	r.POST("/user_system/validate", routes.UserSystemValidate)
+	r.POST("/key/activation/validate", routes.KeyActivationValidate)
 
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
