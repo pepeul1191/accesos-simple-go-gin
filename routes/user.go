@@ -138,11 +138,24 @@ func UserCreate(c *gin.Context) {
 							TipoMensaje: "error",
 							Mensaje: []string{
 								"No se ha crear el nuevo usuario",
-								err.Error(),
+								err2.Error(),
 							}}
 					} else {
 						//5. Crear key de activación y asociar
-
+						var activationKey = configs.RandStringNumber(40)
+						var newUserKey = models.UserKey{
+							Activation: activationKey,
+							UserId:     idNewUser,
+						}
+						if err3 := db.Create(&newUserKey).Error; err3 != nil {
+							error = true
+							errorStruct = structs.Error{
+								TipoMensaje: "error",
+								Mensaje: []string{
+									"No se ha crear el nuevo usuario",
+									err3.Error(),
+								}}
+						}
 					}
 				}
 			} else {

@@ -34,7 +34,7 @@ func EmailFormatCheck(email string) (out bool) {
 	return rpta
 }
 
-func RandStringRunes(n int) string {
+func RandStringNumber(n int) string {
 	rand.Seed(time.Now().UnixNano())
 	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	b := make([]rune, n)
