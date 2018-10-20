@@ -141,7 +141,8 @@ func UserCreate(c *gin.Context) {
 								err.Error(),
 							}}
 					} else {
-						//5. Crear usuario y key de activación
+						//5. Crear key de activación y asociar
+
 					}
 				}
 			} else {
