@@ -71,6 +71,7 @@ func UserCreate(c *gin.Context) {
 	var error bool = false
 	var idNewUser int
 	var errorStruct structs.Error
+	var rptaStruct structs.KeyActivationStruct
 	var postData string = c.PostForm("data")
 	data := &structs.UserCreateStruct{}
 	err := json.Unmarshal([]byte(postData), data)
@@ -110,7 +111,7 @@ func UserCreate(c *gin.Context) {
 					}}
 			} else if err.Error() == "record not found" {
 				//2.2 No es repetido -> OK
-				//3. Encriptar pass y crear usuario
+				//3. Crear usuario
 				var newUser = models.User{
 					User:          data.User,
 					Pass:          data.Pass,
@@ -127,6 +128,41 @@ func UserCreate(c *gin.Context) {
 						}}
 				} else {
 					idNewUser = newUser.ID
+					//4. Crear asociación usuario sistema
+					var newUserSystem = models.UserSystem{
+						SystemId: data.SystemId,
+						UserId:   idNewUser,
+					}
+					if err2 := db.Create(&newUserSystem).Error; err2 != nil {
+						error = true
+						errorStruct = structs.Error{
+							TipoMensaje: "error",
+							Mensaje: []string{
+								"No se ha crear el nuevo usuario",
+								err2.Error(),
+							}}
+					} else {
+						//5. Crear key de activación y asociar
+						var activationKey = configs.RandStringNumber(40)
+						var newUserKey = models.UserKey{
+							Activation: activationKey,
+							UserId:     idNewUser,
+						}
+						if err3 := db.Create(&newUserKey).Error; err3 != nil {
+							error = true
+							errorStruct = structs.Error{
+								TipoMensaje: "error",
+								Mensaje: []string{
+									"No se ha crear el nuevo usuario",
+									err3.Error(),
+								}}
+						} else {
+							rptaStruct = structs.KeyActivationStruct{
+								UserId:        idNewUser,
+								ActivationKey: activationKey,
+							}
+						}
+					}
 				}
 			} else {
 				defer db.Close()
@@ -154,7 +190,7 @@ func UserCreate(c *gin.Context) {
 	if error == true {
 		c.JSON(500, errorStruct)
 	} else {
-		c.String(200, strconv.Itoa(idNewUser))
+		c.JSON(200, rptaStruct)
 	}
 }
 
