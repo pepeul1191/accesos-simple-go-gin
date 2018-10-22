@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/swp/access/configs"
@@ -42,6 +41,7 @@ func KeyActivationValidate(c *gin.Context) {
 					}}
 			}
 		}
+		defer db.Close()
 		if error == true {
 			c.JSON(500, errorStruct)
 		} else {
@@ -54,9 +54,6 @@ func KeyReset(c *gin.Context) {
 	var userId string = c.PostForm("user_id")
 	var key models.UserKey
 	var resetKey = configs.RandStringNumber(40)
-	fmt.Println("1 +++++++++++++++++++++++++++++++")
-	fmt.Println(userId)
-	fmt.Println("2 +++++++++++++++++++++++++++++++")
 	db := configs.Database()
 	if err := db.Model(&key).Where("user_id = ?", userId).Update(
 		"Reset", resetKey).Error; err != nil {
@@ -66,7 +63,9 @@ func KeyReset(c *gin.Context) {
 				"No se ha podido actualizar el reset key",
 				err.Error(),
 			}}
+		defer db.Close()
 		c.JSON(500, rpta)
 	}
+	defer db.Close()
 	c.JSON(200, resetKey)
 }
