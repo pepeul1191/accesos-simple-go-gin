@@ -10,11 +10,24 @@ Given("Generar petición HTTP {string} con headers") do |url|
   }
 end
 
-When("Ejecutar petición HTTP") do
+When("Ejecutar petición HTTP Body Data") do
   @response = HTTParty.post(
     @url,
     headers: @headers,
     body: 'data=' + URI.escape(@data.to_json, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")),
+  )
+end
+
+When("Ejecutar petición HTTP Form Data") do
+  data = ''
+  @data.each do |key, value|
+    data = data + key.to_s + '=' + URI.escape(value.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + '&'
+  end
+  puts data
+  @response = HTTParty.post(
+    @url,
+    headers: @headers,
+    body: data
   )
 end
 

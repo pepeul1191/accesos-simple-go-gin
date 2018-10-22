@@ -4,5 +4,5 @@ Feature: Validate Activation Key
   Scenario: Validate user
     Given Generar petición HTTP "key/activation/validate" con headers
     Given Crear POST data activation-key-validate sin errores
-    When Ejecutar petición HTTP
+    When Ejecutar petición HTTP Body Data
     Then Se debe obtener un status code success 200

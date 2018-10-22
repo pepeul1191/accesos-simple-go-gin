@@ -28,11 +28,6 @@ func KeyActivationValidate(c *gin.Context) {
 	} else {
 		var key models.UserKey
 		db := configs.Database()
-		fmt.Println("1 ++++++++++++++++++++++++++++++++++++++++++++")
-		fmt.Println(data.UserId)
-		fmt.Println("2 ++++++++++++++++++++++++++++++++++++++++++++")
-		fmt.Println(data.ActivationKey)
-		fmt.Println("3 ++++++++++++++++++++++++++++++++++++++++++++")
 		err := db.Where("user_id = ? AND activation = ?", data.UserId, data.ActivationKey).Find(&key).Count(&count).Error
 		if err != nil {
 			if err.Error() == "record not found" {
@@ -53,4 +48,25 @@ func KeyActivationValidate(c *gin.Context) {
 			c.JSON(200, count)
 		}
 	}
+}
+
+func KeyReset(c *gin.Context) {
+	var userId string = c.PostForm("user_id")
+	var key models.UserKey
+	var resetKey = configs.RandStringNumber(40)
+	fmt.Println("1 +++++++++++++++++++++++++++++++")
+	fmt.Println(userId)
+	fmt.Println("2 +++++++++++++++++++++++++++++++")
+	db := configs.Database()
+	if err := db.Model(&key).Where("user_id = ?", userId).Update(
+		"Reset", resetKey).Error; err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"No se ha podido actualizar el reset key",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	}
+	c.JSON(200, "ok")
 }
