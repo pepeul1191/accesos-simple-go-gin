@@ -23,7 +23,7 @@ When("Ejecutar petición HTTP Form Data") do
   @data.each do |key, value|
     data = data + key.to_s + '=' + URI.escape(value.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + '&'
   end
-  puts data
+  #puts data
   @response = HTTParty.post(
     @url,
     headers: @headers,

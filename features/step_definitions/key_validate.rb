@@ -1,6 +1,6 @@
 Given("Crear POST data activation-key-validate sin errores") do
   @data = {
-    :user_id => 7,
-    :activation_key => 'QnvOXIKCwelJpGtGnAFmJYMzjjFfBRVUNpOaZkZs',
+    :user_id => 17,
+    :activation_key => 'DWLqhgcXcDKSiPbkwunyKoEAmaPqZRiSOWjVwutl',
   }
 end

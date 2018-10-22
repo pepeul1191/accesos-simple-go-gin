@@ -29,15 +29,6 @@ func UserSystemValidate(c *gin.Context) {
 		var user string = data.User
 		var systemId string = data.SystemId
 		var pass string = data.Pass
-		/*
-			fmt.Println("1 ++++++++++++++++++++++++++++++++")
-			fmt.Println(user)
-			fmt.Println("2 ++++++++++++++++++++++++++++++++")
-			fmt.Println(pass)
-			fmt.Println("3 ++++++++++++++++++++++++++++++++")
-			fmt.Println(systemId)
-			fmt.Println("4 ++++++++++++++++++++++++++++++++")
-		*/
 		db := configs.Database()
 		var state string = ""
 		var userStateSystem models.UserStateSystem

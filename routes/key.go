@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"encoding/json"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/swp/access/configs"
@@ -13,21 +13,20 @@ func KeyActivationValidate(c *gin.Context) {
 	var error bool = false
 	var count int
 	var errorStruct structs.Error
-	var postData string = c.PostForm("data")
-	data := &structs.KeyActivationStruct{}
-	err := json.Unmarshal([]byte(postData), data)
+	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	var activationKey string = c.PostForm("activation_key")
 	if err != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
-				"Sent parameter could not be parsed to integer",
+				"Error de parseo de user_id",
 				err.Error(),
 			}}
 		c.JSON(500, rpta)
 	} else {
 		var key models.UserKey
 		db := configs.Database()
-		err := db.Where("user_id = ? AND activation = ?", data.UserId, data.ActivationKey).Find(&key).Count(&count).Error
+		err := db.Where("user_id = ? AND activation = ?", userId, activationKey).Find(&key).Count(&count).Error
 		if err != nil {
 			if err.Error() == "record not found" {
 				count = 0
@@ -55,13 +54,13 @@ func KeyReset(c *gin.Context) {
 	var key models.UserKey
 	var resetKey = configs.RandStringNumber(40)
 	db := configs.Database()
-	if err := db.Model(&key).Where("user_id = ?", userId).Update(
-		"Reset", resetKey).Error; err != nil {
+	if err2 := db.Model(&key).Where("user_id = ?", userId).Update(
+		"Reset", resetKey).Error; err2 != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
 				"No se ha podido actualizar el reset key",
-				err.Error(),
+				err2.Error(),
 			}}
 		defer db.Close()
 		c.JSON(500, rpta)
