@@ -50,21 +50,31 @@ func KeyActivationValidate(c *gin.Context) {
 }
 
 func KeyReset(c *gin.Context) {
-	var userId string = c.PostForm("user_id")
+	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
 	var key models.UserKey
 	var resetKey = configs.RandStringNumber(40)
-	db := configs.Database()
-	if err2 := db.Model(&key).Where("user_id = ?", userId).Update(
-		"Reset", resetKey).Error; err2 != nil {
+	if err != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
-				"No se ha podido actualizar el reset key",
-				err2.Error(),
+				"Error de parseo de user_id",
+				err.Error(),
 			}}
-		defer db.Close()
 		c.JSON(500, rpta)
+	} else {
+		db := configs.Database()
+		if err2 := db.Model(&key).Where("user_id = ?", userId).Update(
+			"Reset", resetKey).Error; err2 != nil {
+			rpta := structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"No se ha podido actualizar el reset key",
+					err2.Error(),
+				}}
+			defer db.Close()
+			c.JSON(500, rpta)
+		}
+		defer db.Close()
+		c.JSON(200, resetKey)
 	}
-	defer db.Close()
-	c.JSON(200, resetKey)
 }
