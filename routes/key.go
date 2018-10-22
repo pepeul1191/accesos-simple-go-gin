@@ -68,5 +68,5 @@ func KeyReset(c *gin.Context) {
 			}}
 		c.JSON(500, rpta)
 	}
-	c.JSON(200, "ok")
+	c.JSON(200, resetKey)
 }
