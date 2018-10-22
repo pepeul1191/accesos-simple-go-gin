@@ -2,7 +2,6 @@ package routes
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -114,9 +113,9 @@ func UserCreate(c *gin.Context) {
 				//3. Encriptar pass y crear usuario
 				var newUser = models.User{
 					User:          data.User,
-					Pass:          fmt.Sprintf("%x", data.Pass),
+					Pass:          data.Pass,
 					Email:         data.Email,
-					User_state_id: 6,
+					User_state_id: 1,
 				}
 				if err := db.Create(&newUser).Error; err != nil {
 					error = true
