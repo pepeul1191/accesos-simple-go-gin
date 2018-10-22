@@ -104,10 +104,10 @@ func UserCreate(c *gin.Context) {
 				//2.2 No es repetido -> OK
 				//3. Crear usuario
 				var newUser = models.User{
-					User:          data.User,
-					Pass:          data.Pass,
-					Email:         data.Email,
-					User_state_id: 1,
+					User:        data.User,
+					Pass:        data.Pass,
+					Email:       data.Email,
+					UserStateId: 1,
 				}
 				if err := db.Create(&newUser).Error; err != nil {
 					error = true
@@ -223,5 +223,34 @@ func UserDelete(c *gin.Context) {
 			defer db.Close()
 			c.JSON(200, "User deleted")
 		}
+	}
+}
+
+func UserStateUpdate(c *gin.Context) {
+	userId, err1 := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	userStateId, err2 := strconv.ParseInt(c.PostForm("user_state_id"), 10, 64)
+	if err1 != nil && err2 != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"Parsing error of user_id and/or user_state_id",
+			}}
+		c.JSON(500, rpta)
+	} else {
+		var user models.User
+		db := configs.Database()
+		if err := db.Model(&user).Where("id = ?", userId).Update(
+			"UserStateId", userStateId).Error; err != nil {
+			rpta := structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"Could not update the	user_state_id",
+					err.Error(),
+				}}
+			defer db.Close()
+			c.JSON(500, rpta)
+		}
+		defer db.Close()
+		c.JSON(200, "ok")
 	}
 }

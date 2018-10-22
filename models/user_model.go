@@ -5,11 +5,11 @@ import (
 )
 
 type User struct {
-	ID            int    `gorm:"primary_key" json:"id"`
-	User          string `gorm:"column:user" json:"user"`
-	Pass          string `gorm:"column:pass" json:"pass"`
-	Email         string `gorm:"column:email" json:"email"`
-	User_state_id int    `gorm:"column:user_state_id" json:"user_state_id,omitempty"`
+	ID          int    `gorm:"primary_key" json:"id"`
+	User        string `gorm:"column:user" json:"user"`
+	Pass        string `gorm:"column:pass" json:"pass"`
+	Email       string `gorm:"column:email" json:"email"`
+	UserStateId int    `gorm:"column:user_state_id" json:"user_state_id,omitempty"`
 }
 
 func (User) TableName() string {

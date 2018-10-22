@@ -19,13 +19,13 @@ func KeyActivationValidate(c *gin.Context) {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
-				"Error de parseo de user_id",
+				"Parsing error of user_id",
 				err.Error(),
 			}}
 		c.JSON(500, rpta)
 	} else {
-		var key models.UserKey
 		db := configs.Database()
+		var key models.UserKey
 		err := db.Where("user_id = ? AND activation = ?", userId, activationKey).Find(&key).Count(&count).Error
 		if err != nil {
 			if err.Error() == "record not found" {
@@ -51,24 +51,24 @@ func KeyActivationValidate(c *gin.Context) {
 
 func KeyReset(c *gin.Context) {
 	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
-	var key models.UserKey
 	var resetKey = configs.RandStringNumber(40)
 	if err != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
 			Mensaje: []string{
-				"Error de parseo de user_id",
+				"Parsing error of user_id",
 				err.Error(),
 			}}
 		c.JSON(500, rpta)
 	} else {
 		db := configs.Database()
+		var key models.UserKey
 		if err2 := db.Model(&key).Where("user_id = ?", userId).Update(
 			"Reset", resetKey).Error; err2 != nil {
 			rpta := structs.Error{
 				TipoMensaje: "error",
 				Mensaje: []string{
-					"No se ha podido actualizar el reset key",
+					"Unable to update the reset key",
 					err2.Error(),
 				}}
 			defer db.Close()
