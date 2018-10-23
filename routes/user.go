@@ -114,7 +114,7 @@ func UserCreate(c *gin.Context) {
 					errorStruct = structs.Error{
 						TipoMensaje: "error",
 						Mensaje: []string{
-							"No se ha crear el nuevo usuario",
+							"The new user could not be created, err1 ",
 							err.Error(),
 						}}
 				} else {
@@ -129,7 +129,7 @@ func UserCreate(c *gin.Context) {
 						errorStruct = structs.Error{
 							TipoMensaje: "error",
 							Mensaje: []string{
-								"No se ha crear el nuevo usuario",
+								"The new user could not be created, err2 ",
 								err2.Error(),
 							}}
 					} else {
@@ -144,7 +144,7 @@ func UserCreate(c *gin.Context) {
 							errorStruct = structs.Error{
 								TipoMensaje: "error",
 								Mensaje: []string{
-									"No se ha crear el nuevo usuario",
+									"The new user could not be created, err3 ",
 									err3.Error(),
 								}}
 						} else {

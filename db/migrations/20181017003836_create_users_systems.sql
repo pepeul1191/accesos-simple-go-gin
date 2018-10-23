@@ -4,7 +4,7 @@ CREATE TABLE users_systems(
 	id	INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   user_id INTEGER,
   system_id INTEGER,
-  CONSTRAINT fk_user_system_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+  CONSTRAINT fk_user_system_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT fk_user_system_id FOREIGN KEY (system_id) REFERENCES systems(id)
 );
 
