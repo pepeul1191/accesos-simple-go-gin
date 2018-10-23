@@ -51,7 +51,8 @@ func KeyActivationValidate(c *gin.Context) {
 
 func KeyReset(c *gin.Context) {
 	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
-	var resetKey = configs.RandStringNumber(40)
+	var rptaError structs.Error
+	var status int
 	if err != nil {
 		rpta := structs.Error{
 			TipoMensaje: "error",
@@ -61,20 +62,35 @@ func KeyReset(c *gin.Context) {
 			}}
 		c.JSON(500, rpta)
 	} else {
+		var resetKey = configs.RandStringNumber(40)
 		db := configs.Database()
 		var key models.UserKey
-		if err2 := db.Model(&key).Where("user_id = ?", userId).Update(
-			"Reset", resetKey).Error; err2 != nil {
-			rpta := structs.Error{
-				TipoMensaje: "error",
-				Mensaje: []string{
-					"Unable to update the reset key",
-					err2.Error(),
-				}}
+		err2 := db.Where("user_id = ?", userId).Find(&key).Error
+		if err2 != nil {
+			if err2.Error() == "record not found" {
+				rptaError = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"User not found",
+						err2.Error(),
+					}}
+				status = 404
+			} else {
+				rptaError = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"Unable to update the reset key",
+						err2.Error(),
+					}}
+				status = 500
+			}
 			defer db.Close()
-			c.JSON(500, rpta)
+			c.JSON(status, rptaError)
+		} else {
+			key.Reset = resetKey
+			db.Update(key)
+			defer db.Close()
+			c.JSON(200, resetKey)
 		}
-		defer db.Close()
-		c.JSON(200, resetKey)
 	}
 }
