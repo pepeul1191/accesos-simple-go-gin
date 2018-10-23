@@ -150,7 +150,10 @@ func KeyResetByEmail(c *gin.Context) {
 			key.Reset = resetKey
 			db.Model(&key).Update("reset", resetKey)
 			defer db.Close()
-			c.JSON(200, resetKey)
+			c.JSON(200, structs.KeyResetStruct{
+				UserId:   user.ID,
+				ResetKey: resetKey,
+			})
 		}
 	}
 }
