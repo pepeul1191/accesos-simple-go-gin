@@ -49,7 +49,7 @@ func KeyActivationValidate(c *gin.Context) {
 	}
 }
 
-func KeyReset(c *gin.Context) {
+func KeyResetByUserId(c *gin.Context) {
 	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
 	var rptaError structs.Error
 	var status int
@@ -62,7 +62,6 @@ func KeyReset(c *gin.Context) {
 			}}
 		c.JSON(500, rpta)
 	} else {
-		var resetKey = configs.RandStringNumber(40)
 		db := configs.Database()
 		var key models.UserKey
 		err2 := db.Where("user_id = ?", userId).Find(&key).Error
@@ -87,8 +86,69 @@ func KeyReset(c *gin.Context) {
 			defer db.Close()
 			c.JSON(status, rptaError)
 		} else {
+			var resetKey = configs.RandStringNumber(40)
 			key.Reset = resetKey
-			db.Update(key)
+			db.Model(&key).Update("reset", resetKey)
+			defer db.Close()
+			c.JSON(200, resetKey)
+		}
+	}
+}
+
+func KeyResetByEmail(c *gin.Context) {
+	var email string = c.PostForm("email")
+	var rptaError structs.Error
+	var status int
+	db := configs.Database()
+	var user models.User
+	var key models.UserKey
+	err := db.Where("email = ?", email).Find(&user).Error
+	if err != nil {
+		if err.Error() == "record not found" {
+			rptaError = structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"User not found",
+					err.Error(),
+				}}
+			status = 404
+		} else {
+			rptaError = structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"Unable to find the user",
+					err.Error(),
+				}}
+			status = 500
+		}
+		defer db.Close()
+		c.JSON(status, rptaError)
+	} else {
+		err2 := db.Where("user_id = ?", user.ID).Find(&key).Error
+		if err2 != nil {
+			if err2.Error() == "record not found" {
+				rptaError = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"User Key not found",
+						err2.Error(),
+					}}
+				status = 404
+			} else {
+				rptaError = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"Unable to update the reset user key",
+						err2.Error(),
+					}}
+				status = 500
+			}
+			defer db.Close()
+			c.JSON(status, rptaError)
+		} else {
+			var resetKey = configs.RandStringNumber(40)
+			key.Reset = resetKey
+			db.Model(&key).Update("reset", resetKey)
 			defer db.Close()
 			c.JSON(200, resetKey)
 		}
