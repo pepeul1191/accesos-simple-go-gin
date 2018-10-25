@@ -35,7 +35,47 @@ func KeyActivationValidate(c *gin.Context) {
 				errorStruct = structs.Error{
 					TipoMensaje: "error",
 					Mensaje: []string{
-						"An error occurred while validating the user",
+						"An error occurred while validating the activation key of the user",
+						err.Error(),
+					}}
+			}
+		}
+		defer db.Close()
+		if error == true {
+			c.JSON(500, errorStruct)
+		} else {
+			c.JSON(200, count)
+		}
+	}
+}
+
+func KeyResetalidate(c *gin.Context) {
+	var error bool = false
+	var count int
+	var errorStruct structs.Error
+	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	var resetKey string = c.PostForm("reset_key")
+	if err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"Parsing error of user_id",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	} else {
+		db := configs.Database()
+		var key models.UserKey
+		err := db.Where("user_id = ? AND reset = ?", userId, resetKey).Find(&key).Count(&count).Error
+		if err != nil {
+			if err.Error() == "record not found" {
+				count = 0
+			} else {
+				error = true
+				errorStruct = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"An error occurred while validating the reset key of the user",
 						err.Error(),
 					}}
 			}
