@@ -89,7 +89,7 @@ func KeyResetValidate(c *gin.Context) {
 	}
 }
 
-func KeyActivationResetByUserId(c *gin.Context) {
+func KeyActivationUpdateByUserId(c *gin.Context) {
 	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
 	var rptaError structs.Error
 	var status int
@@ -128,6 +128,51 @@ func KeyActivationResetByUserId(c *gin.Context) {
 		} else {
 			var resetKey = configs.RandStringNumber(40)
 			db.Model(&key).Where("user_id = ?", userId).Update("Activation", resetKey)
+			defer db.Close()
+			c.JSON(200, resetKey)
+		}
+	}
+}
+
+func KeyResetUpdateByUserId(c *gin.Context) {
+	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	var rptaError structs.Error
+	var status int
+	if err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"Parsing error of user_id",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	} else {
+		db := configs.Database()
+		var key models.UserKey
+		err2 := db.Where("user_id = ?", userId).Find(&key).Error
+		if err2 != nil {
+			if err2.Error() == "record not found" {
+				rptaError = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"User not found",
+						err2.Error(),
+					}}
+				status = 404
+			} else {
+				rptaError = structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"Unable to update the reset key",
+						err2.Error(),
+					}}
+				status = 500
+			}
+			defer db.Close()
+			c.JSON(status, rptaError)
+		} else {
+			var resetKey = configs.RandStringNumber(40)
+			db.Model(&key).Where("user_id = ?", userId).Update("Reset", resetKey)
 			defer db.Close()
 			c.JSON(200, resetKey)
 		}
