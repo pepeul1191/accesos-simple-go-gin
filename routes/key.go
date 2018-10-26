@@ -49,7 +49,7 @@ func KeyActivationValidate(c *gin.Context) {
 	}
 }
 
-func KeyResetalidate(c *gin.Context) {
+func KeyResetValidate(c *gin.Context) {
 	var error bool = false
 	var count int
 	var errorStruct structs.Error
@@ -89,7 +89,7 @@ func KeyResetalidate(c *gin.Context) {
 	}
 }
 
-func KeyResetByUserId(c *gin.Context) {
+func KeyActivationResetByUserId(c *gin.Context) {
 	userId, err := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
 	var rptaError structs.Error
 	var status int
@@ -127,8 +127,7 @@ func KeyResetByUserId(c *gin.Context) {
 			c.JSON(status, rptaError)
 		} else {
 			var resetKey = configs.RandStringNumber(40)
-			key.Reset = resetKey
-			db.Model(&key).Update("reset", resetKey)
+			db.Model(&key).Where("user_id = ?", userId).Update("Activation", resetKey)
 			defer db.Close()
 			c.JSON(200, resetKey)
 		}

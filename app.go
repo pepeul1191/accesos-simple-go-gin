@@ -50,9 +50,9 @@ func main() {
 	r.POST("/user/delete/:id", routes.UserDelete)
 	r.POST("/user_system/validate", routes.UserSystemValidate)
 	r.POST("/key/activation/validate", routes.KeyActivationValidate)
-	r.POST("/key/reset_pass/validate", routes.KeyResetalidate)
+	r.POST("/key/reset_pass/validate", routes.KeyResetValidate)
 	r.POST("/key/reset_by_email", routes.KeyResetByEmail)
-	r.POST("/key/reset_by_user_id", routes.KeyResetByUserId)
+	r.POST("/key/activation/reset_by_user_id", routes.KeyActivationResetByUserId)
 	// ruta por default
 	r.NoRoute(routes.ErrorNoRoute)
 	r.Run(":4100") // listen and serve on 0.0.0.0:8080
