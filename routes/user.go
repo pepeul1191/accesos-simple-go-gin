@@ -254,3 +254,32 @@ func UserStateUpdate(c *gin.Context) {
 		c.JSON(200, "ok")
 	}
 }
+
+func UserPassUpdate(c *gin.Context) {
+	userId, err1 := strconv.ParseInt(c.PostForm("user_id"), 10, 64)
+	var pass string = c.PostForm("pass")
+	if err1 != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"Parsing error of user_id",
+			}}
+		c.JSON(500, rpta)
+	} else {
+		var user models.User
+		db := configs.Database()
+		if err := db.Model(&user).Where("id = ?", userId).Update(
+			"Pass", pass).Error; err != nil {
+			rpta := structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"Could not update the	pass",
+					err.Error(),
+				}}
+			defer db.Close()
+			c.JSON(500, rpta)
+		}
+		defer db.Close()
+		c.JSON(200, "ok")
+	}
+}
