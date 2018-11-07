@@ -6,3 +6,9 @@ type UserCreateStruct struct {
 	Email    string `json:"email"`
 	SystemId int    `json:"system_id"`
 }
+
+type UserGetStruct struct {
+	User        string `json:"user"`
+	Email       string `json:"email"`
+	UserStateId int    `json:"state_id"`
+}

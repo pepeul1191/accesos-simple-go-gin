@@ -46,6 +46,7 @@ func main() {
 	r.GET("/user_state/get/:id", routes.UserStateGet)
 	r.POST("/permission/save", routes.PermissionSave)
 	r.POST("/user/create", routes.UserCreate)
+	r.GET("/user/get/:id", routes.UserGet)
 	r.POST("/user/update_state", routes.UserStateUpdate)
 	r.POST("/user/update_pass", routes.UserPassUpdate)
 	r.POST("/user/delete/:id", routes.UserDelete)

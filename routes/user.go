@@ -283,3 +283,36 @@ func UserPassUpdate(c *gin.Context) {
 		c.JSON(200, "ok")
 	}
 }
+
+func UserGet(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"Sent parameter could not be parsed to integer",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	} else {
+		db := configs.Database()
+		var user models.User
+		if err := db.Where("id = ?", id).Find(&user).Error; err != nil {
+			rpta := structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"It was not possible to get the user",
+					err.Error(),
+				}}
+			c.JSON(500, rpta)
+		} else {
+			defer db.Close()
+			rpta := structs.UserGetStruct{
+				User:        user.User,
+				Email:       user.Email,
+				UserStateId: user.UserStateId,
+			}
+			c.JSON(200, rpta)
+		}
+	}
+}
