@@ -12,3 +12,9 @@ type UserGetStruct struct {
 	Email       string `json:"email"`
 	UserStateId int    `json:"state_id"`
 }
+
+type UserUpdateStruct struct {
+	Id          string `json:"id"`
+	Email       string `json:"email"`
+	UserStateId string `json:"user_state_id"`
+}

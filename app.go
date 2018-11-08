@@ -52,6 +52,7 @@ func main() {
 	r.POST("/user/update_pass", routes.UserPassUpdate)
 	r.POST("/user/delete/:id", routes.UserDelete)
 	r.POST("/user_system/validate", routes.UserSystemValidate)
+	r.POST("/user/update", routes.UserUpdate)
 	r.POST("/key/activation/validate", routes.KeyActivationValidate)
 	r.POST("/key/reset/validate", routes.KeyResetValidate)
 	r.POST("/key/reset_by_email", routes.KeyResetByEmail)

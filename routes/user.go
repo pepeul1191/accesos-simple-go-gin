@@ -333,3 +333,46 @@ func UserGetIdByUser(c *gin.Context) {
 		c.JSON(200, user.ID)
 	}
 }
+
+func UserUpdate(c *gin.Context) {
+	var errorStruct structs.Error
+	var postData string = c.PostForm("data")
+	data := &structs.UserUpdateStruct{}
+	err := json.Unmarshal([]byte(postData), data)
+	if err != nil {
+		errorStruct = structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"No se ha creado el usuario, error de parseo del JSON",
+				err.Error(),
+			}}
+		c.JSON(500, errorStruct)
+	} else {
+		var user models.User
+		db := configs.Database()
+		userStateId, errParsing := strconv.ParseInt(data.UserStateId, 10, 64)
+		if errParsing == nil {
+			if err := db.Model(&user).Where("id = ?", data.Id).Update(
+				"Email", data.Email).Update("UserStateId", userStateId).Error; err != nil {
+				rpta := structs.Error{
+					TipoMensaje: "error",
+					Mensaje: []string{
+						"Could not update the	user",
+						err.Error(),
+					}}
+				defer db.Close()
+				c.JSON(500, rpta)
+			}
+			defer db.Close()
+			c.JSON(200, "ok")
+		} else {
+			rpta := structs.Error{
+				TipoMensaje: "error",
+				Mensaje: []string{
+					"Error parsing the user state id",
+					errParsing.Error(),
+				}}
+			c.JSON(500, rpta)
+		}
+	}
+}
