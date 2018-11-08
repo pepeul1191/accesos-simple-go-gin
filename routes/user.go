@@ -316,3 +316,20 @@ func UserGet(c *gin.Context) {
 		}
 	}
 }
+
+func UserGetIdByUser(c *gin.Context) {
+	db := configs.Database()
+	var user models.User
+	if err := db.Where("user = ?", c.Query("user")).Find(&user).Error; err != nil {
+		rpta := structs.Error{
+			TipoMensaje: "error",
+			Mensaje: []string{
+				"It was not possible to get the user",
+				err.Error(),
+			}}
+		c.JSON(500, rpta)
+	} else {
+		defer db.Close()
+		c.JSON(200, user.ID)
+	}
+}
